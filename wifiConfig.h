@@ -27,7 +27,7 @@
  * char* payload = createPostPayload(PIR_FORMAT, pirValue);
  * @endcode
  * 
- * this creates fills the 'payload' with the following JSON string:
+ * this fills the 'payload' with the following JSON string:
  *  {
  *      "PIR" : 1
  *  } 
