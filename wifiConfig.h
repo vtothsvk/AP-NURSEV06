@@ -23,7 +23,7 @@
  * 
  * e.g.:
  * @code
- * uint8_t pir = 1;
+ * uint8_t pirValue = 1;
  * char* payload = createPostPayload(PIR_FORMAT, pirValue);
  * @endcode
  * 
