@@ -137,7 +137,17 @@ void waspmoteLoop() {
         frame.showFrame();  
         delay(100);
 
+        /**
+         * Example ako posielat data cez HTTP POST
+         * Pre dokumentaciu jednotlivych funkcii a makier vid 'wifiConfig.h' a 'wifiManager.h'
+         * 
+         * 1. Vytvori sa string, ktory cheme poslat pomocou 'createPostPayload'
+         * 2. Dany string sa postne pomocou 'postData' (ERROR_CHECK() je len debug vypis)
+         */
         char* payload = createPostPayload(PIR_FORMAT, Pvalue);
+        ERROR_CHECK(
+            postData(payload);
+        );
 
         USB.println("-----------------------------");
         USB.print("Temperature: ");
