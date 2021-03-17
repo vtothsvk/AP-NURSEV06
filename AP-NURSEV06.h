@@ -17,6 +17,7 @@
 #include "consoleLog.h"
 #include "wifiConfig.h"
 #include "wifiManager.h"
+#include "authCredentials.h"
 
 //Main programme library
 #include "waspmote.h"
