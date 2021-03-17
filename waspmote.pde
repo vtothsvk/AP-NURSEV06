@@ -146,7 +146,7 @@ void waspmoteLoop() {
          */
         char* payload = createPostPayload(PIR_FORMAT, Pvalue);
         ERROR_CHECK(
-            postData(payload);
+            postData(payload)
         );
 
         USB.println("-----------------------------");
