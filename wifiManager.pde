@@ -1,18 +1,14 @@
 #include "wifiManager.h"
 
 // WiFi AP settings 
-//char ESSID[] = "fei-iot";
-//char PASSW[] = "F+e-i.feb575";
-//char ESSID[] = "meshlium6970";
-//char PASSW[] = "alsnurse";
-char ESSID[] = "Allegro-512";
-char PASSW[] = "*youarita@35";
+char ESSID[] = WIFI_SSID;
+char PASSW[] = WIFI_PASS;
 
 uint8_t socket = SOCKET0;
-char type[] = "http";
-char host[] = "192.168.1.44";
-char port[] = "1880";
-char url[]  = "waspmote";
+char type[] = WIFI_TYPE;
+char host[] = WIFI_HOST;
+char port[] = WIFI_PORT;
+char url[]  = WIFI_URL;
 
 // CA Certifikat konrektneho kusu MESHLIA
 char TRUSTED_CA[] =
@@ -64,6 +60,52 @@ wifi_error_t startWifiManager() {
     return WIFI_OK;
 }//wifiRun
 
+void checkConnection(){
+    if (isConnected()) {
+        logE("WiFi Connection OK");
+    } else {
+        logE("WiFi Connection error");
+    }//if (WIFI_PRO.isConnected())
+}//checkConnection
+
+void wifiGetIp() {
+    if (WIFI_PRO.getIP()) {
+        logE("WiFi IP error");
+    } else {
+        log("WIFI IP: ");
+        logE(WIFI_PRO._ip);
+    }//if (WIFI_PRO.getIP()) 
+}//wifiGetIp
+
+char* createPostPayload(const char* format, ...) {
+    char* out;
+    va_list args;
+
+    va_start(args, format);
+    size_t len = vsnprintf(NULL, 0, format, args) + 1;
+    vsprintf(out, format, args);
+    va_end(args);
+
+    return out;
+}//createPostPayload
+
+wifi_error_t postData(char* payload) {
+    if (isConnected()) {
+        if (WIFI_PRO.post(payload)) {
+            logE("HTTP POST failed with ret: ");
+            WIFI_PRO.printErrorCode();
+
+            return WIFI_POST_RET_FAIL;
+        } else {
+            logE("HTTP POST OK");
+            free(payload);
+            return WIFI_OK;
+        }//if (WIFI_PRO.post(payload))
+    }//if (isConnected())
+
+    return WIFI_NOT_CONNECTED;
+}//advertiseData
+
 void ERROR_CHECK(wifi_error_t error) {
     switch (error) {
         case WIFI_ON_FAIL :
@@ -100,23 +142,6 @@ void ERROR_CHECK(wifi_error_t error) {
     }//switch (error)
 }//ERROR_CHECK
 
-void isConnected() {
-    if (WIFI_PRO.isConnected()) {
-        logE("WiFi Connection OK");
-    } else {
-        logE("WiFi Connection error");
-    }//if (WIFI_PRO.isConnected())
+bool isConnected() {
+    return WIFI_PRO.isConnected();
 }//isConnected
-
-void wifiGetIp() {
-    if (WIFI_PRO.getIP()) {
-        logE("WiFi IP error");
-    } else {
-        log("WIFI IP: ");
-        logE(WIFI_PRO._ip);
-    }//if (WIFI_PRO.getIP()) 
-}//wifiGetIp
-
-wifi_error_t postData(char* payload) {
-    return WIFI_OK;
-}//advertiseData
