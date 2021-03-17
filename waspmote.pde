@@ -137,7 +137,7 @@ void waspmoteLoop() {
         frame.showFrame();  
         delay(100);
 
-        //char* payload = createPostPayload(, )
+        char* payload = createPostPayload(PIR_FORMAT, Pvalue);
 
         USB.println("-----------------------------");
         USB.print("Temperature: ");

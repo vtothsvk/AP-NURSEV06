@@ -91,14 +91,24 @@ char* createPostPayload(const char* format, ...) {
 
 wifi_error_t postData(char* payload) {
     if (isConnected()) {
-        if (WIFI_PRO.post(payload)) {
+        size_t len = snprintf(NULL, 0, POST_PREFIX, SN, myId, payload);
+        char* buffer = (char*)malloc(len) + 1;
+        sprintf(buffer, POST_PREFIX, SN, myId, payload);
+
+        if (WIFI_PRO.post(buffer)) {
             logE("HTTP POST failed with ret: ");
             WIFI_PRO.printErrorCode();
 
+            free(buffer);
+            free(payload);
+            
             return WIFI_POST_RET_FAIL;
         } else {
             logE("HTTP POST OK");
+
+            free(buffer);
             free(payload);
+
             return WIFI_OK;
         }//if (WIFI_PRO.post(payload))
     }//if (isConnected())

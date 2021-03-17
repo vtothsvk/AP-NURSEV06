@@ -31,9 +31,16 @@
  *      "PIR" : 1
  *  } 
  */
-#define PIR_FORMAT"\
+#define PIR_FORMAT "\
 {\
     \"PIR\": %d\
 }"
+
+/**
+ * @brief HTTP POST PREFIX format
+ * 
+ * Used to feed the HTTP POST payload the devices serial number, deviceID and the rest of the POST paload
+ */
+#define POST_PREFIX "{ \"SN\": \"%s\", \"ID\": \"%s\", \"data\": %s}"
 
 #endif
