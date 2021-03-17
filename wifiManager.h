@@ -21,7 +21,7 @@ typedef enum wifi_error_codes{
 /**
  * @brief Start WiFi Manager
  * 
- * Used to connect the waspmote unit to a WiFi network defined by the WiFi configuration in wifiManager.pde src file
+ * Used to connect the waspmote unit to a WiFi network defined by the WiFi configuration in the wifiConfig.h header file
  * 
  * @return 
  *      'WIFI_OK' on success
@@ -47,7 +47,7 @@ void wifiGetIp(void);
  * @brief Creates formatted HTTP POST payload
  * 
  * Used to create a formatted HTTP POST payload using a format string that is filled with the specified data
- * (similiar to using a sprintf function to create a formatted string)
+ * (similiar to using a sprintf function to create a formatted string, see usage example in the waspmote main loop)
  * 
  * @param format    C string to be printed out with %[flags] consuming given arguments
  * @param ...       arguments to be printed into the %[flags] fields

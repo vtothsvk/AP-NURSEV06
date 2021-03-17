@@ -19,6 +19,7 @@
  * 
  * Defines a JSON with the key "PIR" and with a %d flag as its value
  * This allows to pass it an integer value to create a formatted string using the 'createPostPayload' function
+ * (for different format flags refer to https://www.lix.polytechnique.fr/~liberti/public/computing/prog/c/C/FUNCTIONS/format.html)
  * 
  * e.g.:
  * @code

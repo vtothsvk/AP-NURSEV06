@@ -13,7 +13,7 @@
 void log(const char* message);
 
 /**
- * @brief Console log + /n
+ * @brief Console log + \n
  * 
  * Used to log errors and other useful debug information to the serial port console
  * 
