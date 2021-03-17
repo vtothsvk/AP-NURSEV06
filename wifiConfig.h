@@ -37,6 +37,11 @@
     \"PIR\": %d\
 }"
 
+//feel free to create your HTTP POST payload formats (keep in mind, the payload has to be a JSON -> { "key1": value1, "key2": value2, ...} )
+#define MY_FORMAT2 "..."
+#define MY_FORMAT3 "..."
+
+
 /**
  * @brief HTTP POST PREFIX format
  * 
