@@ -15,8 +15,7 @@ typedef enum wifi_error_codes{
     WIFI_URL_FAIL = 5,
     WIFI_TYPE_FAIL = 6,
     WIFI_POST_FAIL = 7,
-    WIFI_POST_RET_FAIL = 8,
-    WIFI_NOT_CONNECTED = 9
+    WIFI_NOT_CONNECTED = 8
 }wifi_error_t;
 
 /**

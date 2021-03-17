@@ -96,13 +96,10 @@ wifi_error_t postData(char* payload) {
         sprintf(buffer, POST_PREFIX, SN, myId, payload);
 
         if (WIFI_PRO.post(buffer)) {
-            logE("HTTP POST failed with ret: ");
-            WIFI_PRO.printErrorCode();
-
             free(buffer);
             free(payload);
             
-            return WIFI_POST_RET_FAIL;
+            return WIFI_POST_FAIL;
         } else {
             logE("HTTP POST OK");
 
@@ -143,7 +140,12 @@ void ERROR_CHECK(wifi_error_t error) {
         break;
 
         case WIFI_POST_FAIL :
-            logE("WiFi POST error");
+            log("HTTP POST failed with ret: ");
+            WIFI_PRO.printErrorCode();
+        break;
+
+        case WIFI_NOT_CONNECTED :
+            logE("WiFi not connected");
         break;
 
         default :
