@@ -22,7 +22,7 @@ void log(const char* message);
 void logE(const char* message);
 
 /**
- * @brief Console log with variable parameters
+ * @brief Console log with variable arguments
  * 
  * Used to log errors and other useful debug information to the serial port (just like using the standart C funcion printf)
  * 
