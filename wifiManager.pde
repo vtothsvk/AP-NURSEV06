@@ -83,6 +83,7 @@ char* createPostPayload(const char* format, ...) {
 
     va_start(args, format);
     size_t len = vsnprintf(NULL, 0, format, args) + 1;
+    out = (char*)malloc(len);
     vsprintf(out, format, args);
     va_end(args);
 

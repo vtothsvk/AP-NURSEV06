@@ -49,4 +49,4 @@
  */
 #define POST_PREFIX "{ \"SN\": \"%s\", \"ID\": \"%s\", \"data\": %s}"
 
-#endif
+#endif//WIFI_CONFIG_H_

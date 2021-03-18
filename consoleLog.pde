@@ -9,10 +9,12 @@ void logE(const char* message) {
 }//logE
 
 void logA(const char* format, ...) {
+    char* buffer;
     va_list args;
-    char buffer[200];
 
     va_start(args, format);
+    size_t len = vsnprintf(NULL, 0, format, args) + 1;
+    buffer = (char*)malloc(len);
     vsprintf(buffer, format, args);
     va_end(args);
 
