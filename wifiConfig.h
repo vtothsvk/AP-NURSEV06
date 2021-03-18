@@ -27,7 +27,7 @@
  * char* payload = createPostPayload(PIR_FORMAT, pirValue);
  * @endcode
  * 
- * this fills the 'payload' with the following JSON string:
+ * this example fills the 'payload' with the following JSON string:
  *  {
  *      "PIR" : 1
  *  } 
@@ -37,7 +37,7 @@
     \"PIR\": %d\
 }"
 
-//feel free to create your HTTP POST payload formats (keep in mind, the payload has to be a JSON -> { "key1": value1, "key2": value2, ...} )
+//feel free to create your HTTP POST payload formats the existing (keep in mind, the payload has to be a JSON -> { "key1": value1, "key2": value2, ...} )
 #define MY_FORMAT2 "{...}"
 #define MY_FORMAT3 "{...}"
 
