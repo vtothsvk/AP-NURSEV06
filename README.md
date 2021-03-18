@@ -12,5 +12,6 @@ FW for the AP-NURSE Care Waspmote system based on the Waspmote API
 * **wifiConfig.h** - header file containing WiFi configuation
 * **wifiManager.h** - WiFi manager header file
 * **wifiManager.pde** - WiFi manager implementation
+* **authCredentials.h** - device UEFIS credentials
 
 If looking for docummentation refer to individual header files
