@@ -19,4 +19,5 @@ void logA(const char* format, ...) {
     va_end(args);
 
     log(buffer);
+    free(buffer);
 }//logA
