@@ -1,6 +1,8 @@
 #ifndef WIFI_CONFIG_H_
 #define WIFI_CONFIG_H_
 
+//toto je test commitu
+
 /**
  * @brief WiFi configuration
  * 
