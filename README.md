@@ -3,6 +3,7 @@
 FW for the AP-NURSE Care Waspmote system based on the Waspmote API
 
 ## Files
+
 * **AP-NURSEV06.h** - main header file containing all relevant includes
 * **AP-NURSEV06.pde** - main project file containing top level logic
 * **waspmote.h** - main FW module header
@@ -15,3 +16,9 @@ FW for the AP-NURSE Care Waspmote system based on the Waspmote API
 * **authCredentials.h** - device UEFIS credentials
 
 If looking for docummentation refer to individual header files
+
+## GIT
+
+* [git Bash](https://git-scm.com/downloads)
+* (Optional)[GitKraken](https://www.gitkraken.com)
+
