@@ -34,14 +34,18 @@
  *      "PIR" : 1
  *  } 
  */
-#define PIR_FORMAT "\
-{\
-    \"PIR\": %d\
-}"
+#define PIR_FORMAT "{ \"PIR\": %d}"
+#define AirQ_FORMAT "{ \"FAirQ\": %f}"
+#define LPG_FORMAT "{ \"FLPG\": %f}"
+#define LUX_FORMAT "{ \"Vluxes\": %f}"
+#define Tlak_FORMAT "{ \"Ttlak\": %f}"
+#define TEMP_FORMAT "{ \"temp\": %f}"
+#define HMD_FORMAT "{ \"humd\": %f}"
+#define PRESS_FORMAT "{ \"Apres\": %f}"
 
 //feel free to create your HTTP POST payload formats the existing (keep in mind, the payload has to be a JSON -> { "key1": value1, "key2": value2, ...} )
-#define MY_FORMAT2 "{...}"
-#define MY_FORMAT3 "{...}"
+#define MESSAGE_01 "{ \"FAirQ\": \"%f\", \"FLPG\": \"%f\", \"Vluxes\": \"%f\", \"Ttlak\": %f}"
+#define MESSAGE_02 "{ \"Pvalue\": \"%d\", \"temp\": \"%f\", \"humd\": \"%f\", \"Apres\": %f}"
 
 
 /**

@@ -76,6 +76,9 @@ void initSensors() {
 
     //Check WiFi IP
     wifiGetIp();
+    // enable interruptions
+    enableInterrupts(PLV_INT);
+    RTC(ON);
 }//initSensors
 
 void waspmoteLoop() {
@@ -110,8 +113,10 @@ void waspmoteLoop() {
     // LPG na abs. hodnotu [ppm]
     // parametre ziskane z kalibracnej krivky a Lzero odhad pre 0.01ppm na zaklade pomeru
     FLPG = Al * pow((((1023.0 / LPG) * LCC - 1.0) * LLoad)/Lzero, -Bl);
+    // disableInterrupts(PLV_INT);
     // USB.printFloat(FLPG, 2);
     // USB.println(F(" ppm"));
+    // enableInterrupts(PLV_INT);
 
     // Airquality na intenzitu [%] (nie je overeny rozsah vystupneho napatia)
     // FAirQ = (AirQ / 1023.0) * 100;
@@ -120,8 +125,10 @@ void waspmoteLoop() {
     // Rzero = (((1023.0 / AirQ) * VCC - 1.0) * RLoad) * pow(natCO2/A, (1.0/B));
     // POZOR !!!!! PIR ovplyvnuje VCC, treba pockat kym sa ustali
     FAirQ = A * pow((((1023.0 / AirQ) * VCC - 1.0) * RLoad)/Rzero, -B);
+    // disableInterrupts(PLV_INT);
     // USB.printFloat(FAirQ, 2);
     // USB.println(F(" ppm"));
+    // enableInterrupts(PLV_INT);
 
     ///////////////////////////////////////
     // 3. Compare threshold
