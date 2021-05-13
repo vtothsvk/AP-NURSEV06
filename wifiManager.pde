@@ -10,6 +10,9 @@ char host[] = WIFI_HOST;
 char port[] = WIFI_PORT;
 char url[]  = WIFI_URL;
 
+char payload[DATA_BUFFER_LEN];
+char request[REQUEST_BUFFER_LEN];
+
 // CA Certifikat konrektneho kusu MESHLIA
 char TRUSTED_CA[] =
 "-----BEGIN CERTIFICATE-----\r"\
@@ -77,42 +80,32 @@ void wifiGetIp() {
     }//if (WIFI_PRO.getIP()) 
 }//wifiGetIp
 
-char* createPostPayload(const char* format, ...) {
-    char* out;
+void createPostPayload(const char* format, ...) {
     va_list args;
 
     va_start(args, format);
-    size_t len = vsnprintf(NULL, 0, format, args) + 1;
-    out = (char*)malloc(len);
-    vsprintf(out, format, args);
+    vsprintf(payload, format, args);
     va_end(args);
-
-    return out;
 }//createPostPayload
 
-wifi_error_t postData(char* payload) {
+wifi_error_t postData(void) {
     if (isConnected()) {
-        size_t len = snprintf(NULL, 0, POST_PREFIX, SN, myId, payload);
-        char* buffer = (char*)malloc(len) + 1;
-        sprintf(buffer, POST_PREFIX, SN, myId, payload);
+        sprintf(request, POST_PREFIX, SN, myId, payload);
 
-        if (WIFI_PRO.post(buffer)) {
-            free(buffer);
-            free(payload);
-            
+        if (WIFI_PRO.post(request)) {            
             return WIFI_POST_FAIL;
         } else {
             logE("HTTP POST OK");
-
-            free(buffer);
-            free(payload);
-
             return WIFI_OK;
-        }//if (WIFI_PRO.post(payload))
+        }//if (WIFI_PRO.post(request))
     }//if (isConnected())
 
     return WIFI_NOT_CONNECTED;
 }//advertiseData
+
+void checkPayload() {
+    logE(payload);
+}
 
 void ERROR_CHECK(wifi_error_t error) {
     switch (error) {

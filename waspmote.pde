@@ -32,7 +32,6 @@ float Al = 5.66393139;
 float Bl = 0.39942484;
 float Lzero = 2.23272148;
 float LCC = 4.7;
-char* payload;
 
 uint8_t error;
 uint8_t status;
@@ -153,13 +152,13 @@ void waspmoteLoop() {
          * 1. Pomocou 'createPostPayload' sa vytvori string, ktory cheme poslat 
          * 2. Dany string sa postne pomocou 'postData' ( ERROR_CHECK() je len debug vypis)
          */
-        payload = createPostPayload(PIR_FORMAT, Pvalue, Bat_FORMAT, Blevel);
+        createPostPayload(PIR_FORMAT, Pvalue, Bat_FORMAT, Blevel);
         disableInterrupts(PLV_INT);
-        logE(payload);
         enableInterrupts(PLV_INT);
         ERROR_CHECK(
-            postData(payload)
+            postData()
         );
+
         disableInterrupts(PLV_INT);
         USB.println("-----------------------------");
         USB.print("Temperature: ");
@@ -223,14 +222,18 @@ void waspmoteLoop() {
 
         // sprava HTTP na premostovaci server
         
-        char* payload = createPostPayload(AirQ_FORMAT, FAirQ);
-        payload = createPostPayload(LPG_FORMAT, FLPG);
-        payload = createPostPayload(LUX_FORMAT, Vluxes);
-        payload = createPostPayload(Tlak_FORMAT, Ttlak);
+        /* vytvaras payloady ale neposielas data, po kazdom vytvoreni payloadu treba data odoslat, aby sa buffer uvolnil
+        a mohol si vytvorit dalsi payload
+        createPostPayload(AirQ_FORMAT, FAirQ);
+        createPostPayload(LPG_FORMAT, FLPG);
+        createPostPayload(LUX_FORMAT, Vluxes);
+        createPostPayload(Tlak_FORMAT, Ttlak);
+        
 
         disableInterrupts(PLV_INT);
-        logE(payload);
+        checkPayload();
         enableInterrupts(PLV_INT);  
+        */
 
         ///////////////////////////////////////
         // 5. Skontroluj WiFi a posli frame N01
@@ -245,10 +248,6 @@ void waspmoteLoop() {
         //frame.showFrame();  
         delay(100);
         //error = WIFI_PRO.sendFrameToMeshlium( type, host, port, frame.buffer, frame.length);
-
-        ERROR_CHECK(
-            postData(payload)
-        );
     
         ///////////////////////////////////////
         // 6. Prepare frame N02 or message
@@ -267,30 +266,32 @@ void waspmoteLoop() {
         delay(100); // Musi byt inak je nespolahlivy
 
         // sprava HTTP na premostovaci server
-
-        payload = createPostPayload(Bat_FORMAT, Blevel);
-        payload = createPostPayload(TEMP_FORMAT, temp);
-        payload = createPostPayload(HMD_FORMAT, humd);
-        payload = createPostPayload(PRESS_FORMAT, Apres);
+        
+        /* rovnaky problem
+        createPostPayload(Bat_FORMAT, Blevel);
+        createPostPayload(TEMP_FORMAT, temp);
+        createPostPayload(HMD_FORMAT, humd);
+        createPostPayload(PRESS_FORMAT, Apres);
 
         ERROR_CHECK(
             postData(payload)
         );
 
         disableInterrupts(PLV_INT);
-        logE(payload);
+        checkPayload();
         enableInterrupts(PLV_INT);
+        */
 
         if ( intFlag & PLV_INT )
         {
             Pvalue = 1;
             disableInterrupts(PLV_INT);
-            char* payload = createPostPayload(PIR_FORMAT, Pvalue);
+            createPostPayload(PIR_FORMAT, Pvalue);
             disableInterrupts(PLV_INT);
-            logE(payload);
+            checkPayload();
             enableInterrupts(PLV_INT);
             ERROR_CHECK(
-            postData(payload)
+            postData()
             );
             clearIntFlag();
             PWR.clearInterruptionPin();
