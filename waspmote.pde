@@ -2,7 +2,7 @@
 
 char moteID[] = "Test_sen";
 char password[] = "libeliumlibelium"; 
-int     Pvalue = 0;
+int     Pvalue = 1;
 int     Qvalue = 0;
 float   temp = 0.0;
 float   humd = 0.0;
@@ -24,14 +24,15 @@ float RLoad = 10.0;
 float A = 116.6020682;
 float B = 2.769034857;
 float Rzero = 156.00;
-float VCC = 3.1;
+float VCC = 4.7;
 float natCO2 = 404.39;
 // parameters for MQ5 calibration
 float LLoad = 10.0;
 float Al = 5.66393139;
 float Bl = 0.39942484;
 float Lzero = 2.23272148;
-float LCC = 3.1;
+float LCC = 4.7;
+char* payload;
 
 uint8_t error;
 uint8_t status;
@@ -78,7 +79,7 @@ void initSensors() {
     wifiGetIp();
     // enable interruptions
     enableInterrupts(PLV_INT);
-    RTC(ON);
+    RTC.ON();
 }//initSensors
 
 void waspmoteLoop() {
@@ -93,9 +94,10 @@ void waspmoteLoop() {
     Apres = BME.getPressure(BME280_OVERSAMP_2X, 0);
     luxes = analogRead(ANALOG7);
     tlak = analogRead(ANALOG2);
-    aux = analogRead(ANALOG4);
+    //aux = analogRead(ANALOG4);
     LPG = analogRead(ANALOG6);
     AirQ = analogRead(ANALOG3);
+    float Blevel = PWR.getBatteryLevel();
 
     ///////////////////////////////////////
     // 2. Convert the sensor level
@@ -135,13 +137,13 @@ void waspmoteLoop() {
     ///////////////////////////////////////
 
     if (Pvalue == 1) {        
-        char body[] = "Movement detected";
-        frame.createFrame(ASCII);
-        frame.addSensor(SENSOR_EVENTS_PIR, Pvalue); 
-        frame.addSensor(SENSOR_STR, body);
-        USB.println(F("2. Encrypting Frame"));   
-        frame.encryptFrame( AES_128, password );
-        frame.showFrame();  
+//        char body[] = "Movement detected";
+//        frame.createFrame(ASCII);
+//        frame.addSensor(SENSOR_EVENTS_PIR, Pvalue); 
+//        frame.addSensor(SENSOR_STR, body);
+//        USB.println(F("2. Encrypting Frame"));   
+//        frame.encryptFrame( AES_128, password );
+//        frame.showFrame();  
         delay(100);
 
         /**
@@ -151,11 +153,14 @@ void waspmoteLoop() {
          * 1. Pomocou 'createPostPayload' sa vytvori string, ktory cheme poslat 
          * 2. Dany string sa postne pomocou 'postData' ( ERROR_CHECK() je len debug vypis)
          */
-        char* payload = createPostPayload(PIR_FORMAT, Pvalue);
+        payload = createPostPayload(PIR_FORMAT, Pvalue, Bat_FORMAT, Blevel);
+        disableInterrupts(PLV_INT);
+        logE(payload);
+        enableInterrupts(PLV_INT);
         ERROR_CHECK(
             postData(payload)
         );
-
+        disableInterrupts(PLV_INT);
         USB.println("-----------------------------");
         USB.print("Temperature: ");
         USB.printFloat(temp, 2);
@@ -181,12 +186,18 @@ void waspmoteLoop() {
         USB.print(F("Air Quality: "));
         USB.printFloat(FAirQ, 2);
         USB.println(F(" ppm"));
+        USB.print(F("Battery level: "));
+        USB.printFloat(Blevel, 2);
+        USB.println(F(" %"));
         USB.println("-----------------------------");
+        enableInterrupts(PLV_INT);
     // USB.printFloat(value, 2);
     // delay(1000);
     } else {
+        disableInterrupts(PLV_INT);
         USB.println(F("Sensor output: Presence not detected"));
         char body[] = "No movement";
+        enableInterrupts(PLV_INT);
     }//if (Pvalue == 1)
 
     ///////////////////////////////////////
@@ -197,7 +208,7 @@ void waspmoteLoop() {
     //  delay(5000);
     //  USB.println(modulo);
     //  USB.println(zvysok);
-    //  USB.println(previous);
+    USB.println(previous);
 
     if (zvysok < 1 ) {
         previous = millis();
@@ -208,9 +219,18 @@ void waspmoteLoop() {
         frame.addSensor(SENSOR_EVENTS_WF, Ttlak);
         // frame.addSensor(SENSOR_CITIES_PRO_US, aux);
         // frame.addSensor(SENSOR_ACC, ACC.getX(),ACC.getY(),ACC.getZ());
-        frame.showFrame();
+        //frame.showFrame();
 
-        //postData  
+        // sprava HTTP na premostovaci server
+        
+        char* payload = createPostPayload(AirQ_FORMAT, FAirQ);
+        payload = createPostPayload(LPG_FORMAT, FLPG);
+        payload = createPostPayload(LUX_FORMAT, Vluxes);
+        payload = createPostPayload(Tlak_FORMAT, Ttlak);
+
+        disableInterrupts(PLV_INT);
+        logE(payload);
+        enableInterrupts(PLV_INT);  
 
         ///////////////////////////////////////
         // 5. Skontroluj WiFi a posli frame N01
@@ -220,11 +240,15 @@ void waspmoteLoop() {
         isConnected();
 
         //  Send Frame to Meshlium
-        USB.println(F("2. Encrypting Frame"));   
-        frame.encryptFrame( AES_128, password );
-        frame.showFrame();  
+        //USB.println(F("2. Encrypting Frame"));   
+        //frame.encryptFrame( AES_128, password );
+        //frame.showFrame();  
         delay(100);
         //error = WIFI_PRO.sendFrameToMeshlium( type, host, port, frame.buffer, frame.length);
+
+        ERROR_CHECK(
+            postData(payload)
+        );
     
         ///////////////////////////////////////
         // 6. Prepare frame N02 or message
@@ -241,6 +265,38 @@ void waspmoteLoop() {
         ///////////////////////////////////////
 
         delay(100); // Musi byt inak je nespolahlivy
+
+        // sprava HTTP na premostovaci server
+
+        payload = createPostPayload(Bat_FORMAT, Blevel);
+        payload = createPostPayload(TEMP_FORMAT, temp);
+        payload = createPostPayload(HMD_FORMAT, humd);
+        payload = createPostPayload(PRESS_FORMAT, Apres);
+
+        ERROR_CHECK(
+            postData(payload)
+        );
+
+        disableInterrupts(PLV_INT);
+        logE(payload);
+        enableInterrupts(PLV_INT);
+
+        if ( intFlag & PLV_INT )
+        {
+            Pvalue = 1;
+            disableInterrupts(PLV_INT);
+            char* payload = createPostPayload(PIR_FORMAT, Pvalue);
+            disableInterrupts(PLV_INT);
+            logE(payload);
+            enableInterrupts(PLV_INT);
+            ERROR_CHECK(
+            postData(payload)
+            );
+            clearIntFlag();
+            PWR.clearInterruptionPin();
+            enableInterrupts(PLV_INT);
+    
+         }
 
         PWR.setSensorPower( SENS_5V, SENS_ON); 
         BME.ON();
