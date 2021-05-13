@@ -55,7 +55,7 @@ void wifiGetIp(void);
  * @return 
  *      formatted HTTP POST payload string
  */
-void createPostPayload(char* out, const char* format, ...);
+void createPostPayload(const char* format, ...);
 
 /**
  * @brief HTTP POST

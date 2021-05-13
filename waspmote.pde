@@ -32,6 +32,9 @@ float Al = 5.66393139;
 float Bl = 0.39942484;
 float Lzero = 2.23272148;
 float LCC = 4.7;
+char value1[10];
+char value2[10];
+char value3[10];
 
 uint8_t error;
 uint8_t status;
@@ -73,6 +76,7 @@ void initSensors() {
     isConnected();
 
     frame.setID(moteID);
+    delay(20000);
 
     //Check WiFi IP
     wifiGetIp();
@@ -96,7 +100,7 @@ void waspmoteLoop() {
     //aux = analogRead(ANALOG4);
     LPG = analogRead(ANALOG6);
     AirQ = analogRead(ANALOG3);
-    float Blevel = PWR.getBatteryLevel();
+    int Blevel = PWR.getBatteryLevel();
 
     ///////////////////////////////////////
     // 2. Convert the sensor level
@@ -135,7 +139,10 @@ void waspmoteLoop() {
     // 3. Compare threshold
     ///////////////////////////////////////
 
-    if (Pvalue == 1) {        
+    if (Pvalue == 1) {    
+        disableInterrupts(PLV_INT);
+        USB.println(PLV_INT);
+        enableInterrupts(PLV_INT);    
 //        char body[] = "Movement detected";
 //        frame.createFrame(ASCII);
 //        frame.addSensor(SENSOR_EVENTS_PIR, Pvalue); 
@@ -152,8 +159,9 @@ void waspmoteLoop() {
          * 1. Pomocou 'createPostPayload' sa vytvori string, ktory cheme poslat 
          * 2. Dany string sa postne pomocou 'postData' ( ERROR_CHECK() je len debug vypis)
          */
-        createPostPayload(PIR_FORMAT, Pvalue, Bat_FORMAT, Blevel);
+        createPostPayload(MESSAGE_04, Pvalue, Blevel);
         disableInterrupts(PLV_INT);
+        checkPayload();
         enableInterrupts(PLV_INT);
         ERROR_CHECK(
             postData()
@@ -191,7 +199,7 @@ void waspmoteLoop() {
         USB.println("-----------------------------");
         enableInterrupts(PLV_INT);
     // USB.printFloat(value, 2);
-    // delay(1000);
+     delay(3000);
     } else {
         disableInterrupts(PLV_INT);
         USB.println(F("Sensor output: Presence not detected"));
@@ -207,33 +215,42 @@ void waspmoteLoop() {
     //  delay(5000);
     //  USB.println(modulo);
     //  USB.println(zvysok);
-    USB.println(previous);
+    //  USB.println(zvysok);
+    delay(100);
 
-    if (zvysok < 1 ) {
+    if ( zvysok < 1 ) {
         previous = millis();
-        frame.createFrame(ASCII);
-        frame.addSensor(SENSOR_GASES_CO2, FAirQ);
-        frame.addSensor(SENSOR_GASES_LPG, FLPG);
-        frame.addSensor(SENSOR_AMBIENT_LUM, Vluxes);
-        frame.addSensor(SENSOR_EVENTS_WF, Ttlak);
+       // frame.createFrame(ASCII);
+       // frame.addSensor(SENSOR_GASES_CO2, FAirQ);
+       // frame.addSensor(SENSOR_GASES_LPG, FLPG);
+       // frame.addSensor(SENSOR_AMBIENT_LUM, Vluxes);
+       // frame.addSensor(SENSOR_EVENTS_WF, Ttlak);
         // frame.addSensor(SENSOR_CITIES_PRO_US, aux);
         // frame.addSensor(SENSOR_ACC, ACC.getX(),ACC.getY(),ACC.getZ());
         //frame.showFrame();
+        Utils.float2String(FAirQ, value1, 2);
+        Utils.float2String(FLPG, value2, 2);
+        Utils.float2String(Vluxes, value3, 2);
+        //value1 = FAirQ;
+        //value2 = FLPG;
+        //value2 = Vluxes;
 
-        // sprava HTTP na premostovaci server
-        
-        /* vytvaras payloady ale neposielas data, po kazdom vytvoreni payloadu treba data odoslat, aby sa buffer uvolnil
-        a mohol si vytvorit dalsi payload
-        createPostPayload(AirQ_FORMAT, FAirQ);
-        createPostPayload(LPG_FORMAT, FLPG);
-        createPostPayload(LUX_FORMAT, Vluxes);
-        createPostPayload(Tlak_FORMAT, Ttlak);
-        
+        // sprava HTTP na premostovaci server 
 
+        createPostPayload(MESSAGE_01, value1, value2, value3);
         disableInterrupts(PLV_INT);
         checkPayload();
-        enableInterrupts(PLV_INT);  
-        */
+        enableInterrupts(PLV_INT); 
+        ERROR_CHECK(
+            postData()
+        ); 
+        createPostPayload(MESSAGE_02, Blevel, Ttlak);
+        disableInterrupts(PLV_INT);
+        checkPayload();
+        enableInterrupts(PLV_INT); 
+        ERROR_CHECK(
+            postData()
+        ); 
 
         ///////////////////////////////////////
         // 5. Skontroluj WiFi a posli frame N01
@@ -266,6 +283,14 @@ void waspmoteLoop() {
         delay(100); // Musi byt inak je nespolahlivy
 
         // sprava HTTP na premostovaci server
+
+        createPostPayload(MESSAGE_03, temp, humd, Apres);
+        disableInterrupts(PLV_INT);
+        checkPayload();
+        enableInterrupts(PLV_INT); 
+        ERROR_CHECK(
+            postData()
+        ); 
         
         /* rovnaky problem
         createPostPayload(Bat_FORMAT, Blevel);
@@ -281,17 +306,18 @@ void waspmoteLoop() {
         checkPayload();
         enableInterrupts(PLV_INT);
         */
-
+        disableInterrupts(PLV_INT);
+        USB.println(intFlag);
+        enableInterrupts(PLV_INT);
         if ( intFlag & PLV_INT )
         {
             Pvalue = 1;
-            disableInterrupts(PLV_INT);
-            createPostPayload(PIR_FORMAT, Pvalue);
+            createPostPayload(MESSAGE_04, Pvalue, Blevel);
             disableInterrupts(PLV_INT);
             checkPayload();
             enableInterrupts(PLV_INT);
             ERROR_CHECK(
-            postData()
+                 postData()
             );
             clearIntFlag();
             PWR.clearInterruptionPin();

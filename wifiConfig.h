@@ -36,19 +36,21 @@
  *  } 
  */
 #define PIR_FORMAT "{ \"PIR\": %d}"
-#define AirQ_FORMAT "{ \"FAirQ\": %.2f}"
-#define LPG_FORMAT "{ \"FLPG\": %.2f}"
-#define LUX_FORMAT "{ \"Vluxes\": %.2f}"
-#define Tlak_FORMAT "{ \"Ttlak\": %.2f}"
-#define TEMP_FORMAT "{ \"temp\": %.2f}"
-#define HMD_FORMAT "{ \"humd\": %.2f}"
-#define PRESS_FORMAT "{ \"Apres\": %.2f}"
+//#define AirQ_FORMAT "{ \"FAirQ\": %.2f}"
+//#define LPG_FORMAT "{ \"FLPG\": %.2f}"
+//#define LUX_FORMAT "{ \"Vluxes\": %.2f}"
+//#define Tlak_FORMAT "{ \"Ttlak\": %.2f}"
+//#define TEMP_FORMAT "{ \"temp\": %.2f}"
+//#define HMD_FORMAT "{ \"humd\": %.2f}"
+//#define PRESS_FORMAT "{ \"Apres\": %.2f}"
 #define FALL_FORMAT "{ \"FALL\": %d}"
 #define Bat_FORMAT "{ \"Blevel\": %d}"
 
-//feel free to create your HTTP POST payload formats the existing (keep in mind, the payload has to be a JSON -> { "key1": value1, "key2": value2, ...} )
-#define MESSAGE_01 "{ \"FAirQ\": \"%.2f\", \"FLPG\": \"%.2f\", \"Vluxes\": \"%.2f\", \"Ttlak\": %.2f}"
-#define MESSAGE_02 "{ \"Pvalue\": \"%d\", \"temp\": \"%.2f\", \"humd\": \"%.2f\", \"Apres\": %.2f}"
+//feel free to create your HTTP POST payload formats the existing (keep in mind, the payload has to be a JSON -> { "key1": value1, "key2": value2, ...} )  
+#define MESSAGE_01 "{ \"FAirQ\": %s, \"FLPG\": %s, \"Vluxes\": %s}"
+#define MESSAGE_02 "{ \"Blevel\": %d, \"Ttlak\": %.2f }"
+#define MESSAGE_03 "{  \"temp\": %.2f, \"humd\": %.2f, \"Apres\": %.2f }"
+#define MESSAGE_04 "{ \"Pvalue\": %d, \"Blevel\": %d }"
 
 
 /**
