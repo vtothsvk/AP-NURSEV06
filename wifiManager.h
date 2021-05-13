@@ -55,20 +55,26 @@ void wifiGetIp(void);
  * @return 
  *      formatted HTTP POST payload string
  */
-char* createPostPayload(const char* format, ...);
+void createPostPayload(char* out, const char* format, ...);
 
 /**
  * @brief HTTP POST
  * 
  * Used for a HTTP POST request with the given payload to a host specified in the WiFi configuration
  * 
- * @param payload   data to be posted
  * 
  * @return
  *      'WIFI_OK' on success
  *      'WIFI_ERR' otherwise
  */
-wifi_error_t postData(char* payload);
+wifi_error_t postData(void);
+
+/**
+ * @brief HTTP POST payload check
+ * 
+ * Used to check generated http request body
+ */
+void checkPayload(void);
 
 /**
  * @brief Error checking function

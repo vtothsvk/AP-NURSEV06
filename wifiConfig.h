@@ -6,13 +6,16 @@
  * 
  * Change the following parameters to suite your network and target host
  */
-#define WIFI_SSID   "Allegro-512"
-#define WIFI_PASS   "*youarita@35"
+#define WIFI_SSID   "nicelife"
+#define WIFI_PASS   "#nicelife"
 
 #define WIFI_TYPE   "http"
-#define WIFI_HOST   "raspberrypi.local"
+#define WIFI_HOST   "192.168.2.7"
 #define WIFI_PORT   "1880"
 #define WIFI_URL    "waspmote"
+
+#define DATA_BUFFER_LEN     150
+#define REQUEST_BUFFER_LEN  256
 
 /**
  * @brief HTTP POST payload formats
@@ -32,14 +35,20 @@
  *      "PIR" : 1
  *  } 
  */
-#define PIR_FORMAT "\
-{\
-    \"PIR\": %d\
-}"
+#define PIR_FORMAT "{ \"PIR\": %d}"
+#define AirQ_FORMAT "{ \"FAirQ\": %.2f}"
+#define LPG_FORMAT "{ \"FLPG\": %.2f}"
+#define LUX_FORMAT "{ \"Vluxes\": %.2f}"
+#define Tlak_FORMAT "{ \"Ttlak\": %.2f}"
+#define TEMP_FORMAT "{ \"temp\": %.2f}"
+#define HMD_FORMAT "{ \"humd\": %.2f}"
+#define PRESS_FORMAT "{ \"Apres\": %.2f}"
+#define FALL_FORMAT "{ \"FALL\": %d}"
+#define Bat_FORMAT "{ \"Blevel\": %d}"
 
 //feel free to create your HTTP POST payload formats the existing (keep in mind, the payload has to be a JSON -> { "key1": value1, "key2": value2, ...} )
-#define MY_FORMAT2 "{...}"
-#define MY_FORMAT3 "{...}"
+#define MESSAGE_01 "{ \"FAirQ\": \"%.2f\", \"FLPG\": \"%.2f\", \"Vluxes\": \"%.2f\", \"Ttlak\": %.2f}"
+#define MESSAGE_02 "{ \"Pvalue\": \"%d\", \"temp\": \"%.2f\", \"humd\": \"%.2f\", \"Apres\": %.2f}"
 
 
 /**
