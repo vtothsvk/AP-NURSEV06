@@ -58,6 +58,6 @@
  * 
  * Used to feed the HTTP POST payload the devices serial number, deviceID and the rest of the POST paload
  */
-#define POST_PREFIX "{ \"SN\": \"%s\", \"ID\": \"%s\", \"data\": %s}"
+#define POST_PREFIX "{ \"SN\": \"%s\", \"kid\": \"%s\", \"devId\": \"%s\", \"data\": %s}"
 
 #endif//WIFI_CONFIG_H_

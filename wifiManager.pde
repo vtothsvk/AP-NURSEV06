@@ -90,7 +90,7 @@ void createPostPayload(const char* format, ...) {
 
 wifi_error_t postData(void) {
     if (isConnected()) {
-        sprintf(request, POST_PREFIX, SN, myId, payload);
+        sprintf(request, POST_PREFIX, SN, kid, myId, payload);
 
         if (WIFI_PRO.post(request)) {            
             return WIFI_POST_FAIL;
